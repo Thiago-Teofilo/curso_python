@@ -1,0 +1,1 @@
+Author of icon: https://www.flaticon.com/br/autores/freepik
