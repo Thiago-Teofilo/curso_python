@@ -61,6 +61,7 @@ class ButtonsGrid(QGridLayout):
         self.display.clearPressed.connect(self._clear)
         self.display.inputPressed.connect(self._insertToDisplay)
         self.display.operatorPressed.connect(self._configLeftOp)
+        self.display.invertPressed.connect(self._invertNumber)
 
         for i, row in enumerate(self._gridMask):
             for j, buttonText in enumerate(row):
