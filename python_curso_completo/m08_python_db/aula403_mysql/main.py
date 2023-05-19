@@ -6,6 +6,7 @@
 import os
 
 import pymysql
+import pymysql.cursors
 import dotenv
 
 TABLE_NAME = 'customers'
@@ -17,6 +18,7 @@ connection = pymysql.connect(
     user=os.environ['MYSQL_USER'],
     password=os.environ['MYSQL_PASSWORD'],
     database=os.environ['MYSQL_DATABASE'],
+    cursorclass=pymysql.cursors.DictCursor,
 )
 
 with connection:
@@ -41,7 +43,7 @@ with connection:
         data = ('Thiago', 20)
         result = cursor.execute(sql, data)
 
-        print(result)
+        # print(result)
     connection.commit()
 
     with connection.cursor() as cursor:
@@ -57,12 +59,12 @@ with connection:
         )
         result = cursor.executemany(sql, data2)
 
-        print(result)
+        # print(result)
     connection.commit()
 
     # Lendo os dados
     with connection.cursor() as cursor:
-        id_query = int(input("Digite o id: "))
+        id_query = 2
         sql = (
             f'SELECT * FROM {TABLE_NAME} '
             'WHERE id = %s'
@@ -71,6 +73,26 @@ with connection:
 
         data_table = cursor.fetchone()
 
-        print(data_table)
+        # print(data_table)
 
+    # Atualizando os dados
+    with connection.cursor() as cursor:
+        sql = (
+            f'UPDATE {TABLE_NAME} '
+            'SET nome=%s, idade=%s '
+            'WHERE id=%s'
+        )
+        cursor.execute(sql, ('Leococitus', 30, 2))
 
+        cursor.execute(f'SELECT * FROM {TABLE_NAME}')
+
+        print("\nFor 1:")
+        [print(row) for row in cursor.fetchall()]
+
+        cursor.scroll(-1)
+        print("\nCursor voltou para linha", cursor.rownumber)
+        
+        print("\nFor 2:")
+        [print(row) for row in cursor.fetchall()]
+
+    connection.commit()
